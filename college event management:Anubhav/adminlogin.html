@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Login – SGC Events</title>
+  <link rel="stylesheet" href="style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+</head>
+<body class="auth-body">
+  <div class="home-bg">
+    <div class="bg-circle c1"></div>
+    <div class="bg-circle c2"></div>
+  </div>
+
+  <nav class="auth-nav">
+    <svg class="nav-logo" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="40" cy="40" r="38" stroke="#f0c040" stroke-width="2.5"/>
+      <path d="M40 14 L52 28 H46 V38 H34 V28 H28 Z" fill="#f0c040"/>
+      <path d="M20 44 Q40 36 60 44 L60 62 Q40 70 20 62 Z" fill="#f0c040" opacity="0.85"/>
+      <circle cx="40" cy="44" r="5" fill="#1a2a6c"/>
+    </svg>
+    <span class="nav-name">Saraswati Group of Colleges<span>Event Portal</span></span>
+    <a href="index.html" class="back-home">← Back to Home</a>
+  </nav>
+
+  <div class="auth-center">
+    <div class="auth-card">
+      <div class="auth-card-header">
+        <div class="auth-card-icon">
+          <svg viewBox="0 0 48 48" fill="none">
+            <rect x="8" y="10" width="32" height="28" rx="3" stroke="currentColor" stroke-width="2.5"/>
+            <path d="M16 22h16M16 29h10" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <h2>Admin Login</h2>
+        <p>Access the admin panel to manage events</p>
+      </div>
+      <div class="auth-card-body">
+        <div class="cred-hint">
+          <svg viewBox="0 0 20 20" fill="currentColor" style="width:16px;height:16px;flex-shrink:0;margin-top:1px">
+            <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"/>
+          </svg>
+          <div><strong>Demo credentials:</strong> Username: <code>admin</code> &nbsp;|&nbsp; Password: <code>1234</code></div>
+        </div>
+
+        <div id="alertBox" class="alert-box error"></div>
+
+        <div class="form-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" placeholder="admin" autocomplete="username" autofocus/>
+          <div class="form-error" id="userError">Username is required.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="••••"/>
+          <div class="form-error" id="passError">Password is required.</div>
+        </div>
+
+        <button class="btn-primary" onclick="doAdminLogin()">Login as Admin</button>
+
+        <div class="auth-footer-link" style="margin-top:16px;">
+Are you a student? <a href="studentlogin.html">Student Login →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    if (localStorage.getItem('sgc_admin')) {
+      window.location.href = 'admin%20dashboard.html';
+    }
+
+    const ADMIN_USER = 'admin';
+    const ADMIN_PASS = '1234';
+
+    function doAdminLogin() {
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+      const userError = document.getElementById('userError');
+      const passError = document.getElementById('passError');
+      const alertBox = document.getElementById('alertBox');
+      let valid = true;
+
+      // Reset
+      userError.classList.remove('visible');
+      passError.classList.remove('visible');
+      alertBox.classList.remove('visible');
+      document.getElementById('username').classList.remove('error-input');
+      document.getElementById('password').classList.remove('error-input');
+
+      if (!username) {
+        userError.classList.add('visible');
+        document.getElementById('username').classList.add('error-input');
+        valid = false;
+      }
+      if (!password) {
+        passError.classList.add('visible');
+        document.getElementById('password').classList.add('error-input');
+        valid = false;
+      }
+      if (!valid) return;
+
+      if (username !== ADMIN_USER || password !== ADMIN_PASS) {
+        alertBox.textContent = 'Invalid username or password. Please try again.';
+        alertBox.classList.add('visible');
+        document.getElementById('password').value = '';
+        document.getElementById('password').focus();
+        return;
+      }
+
+      localStorage.setItem('sgc_admin', JSON.stringify({ user: username, loginTime: new Date().toISOString() }));
+      window.location.href = 'admin%20dashboard.html';
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') doAdminLogin();
+    });
+  </script>
+</body>
+</html>
